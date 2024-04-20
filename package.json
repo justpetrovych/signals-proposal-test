@@ -1,0 +1,24 @@
+{
+  "name": "signals-proposal-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel ./src/index.html",
+    "build": "parcel build ./src/index.html"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.32.0",
+    "parcel": "^2.0.0"
+  },
+  "keywords": [
+    "css",
+    "javascript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "signal-polyfill": "^0.1.0"
+  }
+}
