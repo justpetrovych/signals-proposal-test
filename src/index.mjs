@@ -1,6 +1,6 @@
 import "./styles.css";
 
-import { Signal, effect } from "./signal-utils.mjs";
+import { useSignal, useEffect, useComputed } from "./signal-utils.mjs";
 
 const renderApp = (id) => {
   const appEl = document.getElementById(id);
@@ -11,9 +11,9 @@ const renderApp = (id) => {
     `;
 };
 
-const updateCounter = count => document.getElementById("count").innerText = count;
+const updateCounterDOM = count => document.getElementById("count").innerText = count;
 
-const updateParity = (parity) => {
+const updateParityDOM = (parity) => {
   const countEl = document.getElementById("count");
   const classNameToAdd = parity;
   const classNameToRemove = parity === "even" ? "odd" : "even";
@@ -23,15 +23,14 @@ const updateParity = (parity) => {
 
 renderApp("app");
 
-const counter = new Signal.State(0);
-const isEven = new Signal.Computed(() => (counter.get() & 1) == 1);
-const parity = new Signal.Computed(() => (isEven.get() ? "even" : "odd"));
+const [getCounter, setCounter] = useSignal(0);
 
-effect(() => {
-  updateCounter(counter.get());
-  updateParity(parity.get());
+const [isEven] = useComputed(() => (getCounter() & 1) == 1);
+const [getParity] = useComputed(() => (isEven() ? "even" : "odd"));
+
+useEffect(() => {
+  updateCounterDOM(getCounter());
+  updateParityDOM(getParity());
 });
 
-setInterval(() => {
-  counter.set(counter.get() + 1);
-}, 1000);
+setInterval(() => setCounter(getCounter() + 1), 1000);

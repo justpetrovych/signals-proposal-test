@@ -19,16 +19,28 @@ function processPending() {
   watcher.watch();
 }
 
-const effect = (callback) => {
+const useSignal = (initialValue) => {
+  const state = new Signal.State(initialValue);
+  const getState = () => state.get();
+  const setState = (value) => state.set(value);
+  return [getState, setState];
+};
+
+const useComputed = (callback) => {
+  const computed = new Signal.Computed(callback);
+  return [() => computed.get(), computed];
+};
+
+const useEffect = (callback) => {
   let cleanup;
 
-  const computed = new Signal.Computed(() => {
+  const [getComputed, computed] = useComputed(() => {
     typeof cleanup === "function" && cleanup();
     cleanup = callback();
   });
 
   watcher.watch(computed);
-  computed.get();
+  getComputed();
 
   return () => {
     watcher.unwatch(computed);
@@ -38,5 +50,7 @@ const effect = (callback) => {
 
 export {
   Signal,
-  effect
+  useSignal,
+  useEffect,
+  useComputed
 }
