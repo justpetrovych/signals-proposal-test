@@ -11,16 +11,6 @@ const renderApp = (id) => {
     `;
 };
 
-const updateCounterDOM = count => document.getElementById("count").innerText = count;
-
-const updateParityDOM = (parity) => {
-  const countEl = document.getElementById("count");
-  const classNameToAdd = parity;
-  const classNameToRemove = parity === "even" ? "odd" : "even";
-  countEl.classList.add(classNameToAdd);
-  countEl.classList.remove(classNameToRemove);
-}
-
 renderApp("app");
 
 const [getCounter, setCounter] = useSignal(0);
@@ -29,8 +19,9 @@ const [isEven] = useComputed(() => (getCounter() & 1) == 1);
 const [getParity] = useComputed(() => (isEven() ? "even" : "odd"));
 
 useEffect(() => {
-  updateCounterDOM(getCounter());
-  updateParityDOM(getParity());
+  const countEl = document.getElementById("count");
+  countEl.innerText = getCounter();
+  countEl.className = getParity();
 });
 
 setInterval(() => setCounter(getCounter() + 1), 1000);
